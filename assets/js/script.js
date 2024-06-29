@@ -11,8 +11,8 @@ function getTaskData() {
 
 //Function get output Tasks
 function outputTasks() {
-    const taskList = getTaskData();
-    taskList.forEach(function(taskObj){
+    const tasks = getTaskData();
+    tasks.forEach(function(taskObj){
         const $taskEl = $(`
             <article class="border border-dark-subtle p-3">
                 <h5>Task Title: ${taskObj.title}</h5>
@@ -53,17 +53,16 @@ function createTaskCard() {
     const $taskInfo = $('#description-text');
     const $dueDate = $('#deadline');
 
-    const newTask = {
+    const task = {
         id: taskID,
         title: $taskTitle.val(),
         info: $taskInfo.val(),
         dueDate: $dueDate.val(),
         done: false
     };
-    const taskList = getTaskData();
-    taskList.push(newTask);
-
-    localStorage.setItem('tasks', JSON.stringify(taskList));
+    const tasks = getTaskData();
+    tasks.push(task);
+    localStorage.setItem('tasks', JSON.stringify(task));
     $taskTitle.val('');
     $taskInfo.val('');
     $dueDate.val('');
@@ -89,8 +88,8 @@ function handleDeleteTask(event){
 
 // Todo: create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
-
 }
+
 function init() {
     $('#deadline').datepicker({
         minDate: 0
@@ -98,5 +97,5 @@ function init() {
 }
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function () {
-
+    
 });
