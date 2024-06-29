@@ -4,19 +4,35 @@ const $done = $('.done');
 
 // Retrieve tasks and nextId from localStorage
 function getTaskData() {
-    let taskList = JSON.parse(localStorage.getItem("tasks"));
-    let nextId = JSON.parse(localStorage.getItem("nextId"));
+    const taskList = JSON.parse(localStorage.getItem("tasks"));
+    const nextId = JSON.parse(localStorage.getItem("nextId"));
+    return tasks;
 }
 
 //Function get output Tasks
 function outputTasks() {
-    const tasks = getTaskData
+    const taskList = getTaskData();
+    taskList.forEach(function(taskObj){
+        const $taskEl = $(`
+            <article class="border border-dark-subtle p-3">
+                <h5>Task Title: ${taskObj.title}</h5>
+                <p>Description: ${taskObj.info}</p>
+                <p>Due Date: ${taskObj.dueDate}</p>
+                <button data-id='${taskObj.id}' class='btn bg-danger text-light'>Delete</button>
+            </article>   
+        `);
+        if (taskObj.done) {
+            $done.append($taskEl);
+        } else if (taskObj.inProgress) {
+            $inProgress.append($taskEl);
+        }   else {
+            $started.append($taskEl);
+        }
+
+        
+    })
 }
 
-
-function init() {
-    $('#deadline').datepicker();
-}
 init();
 // Todo: create a function to generate a unique task id
 
@@ -31,21 +47,21 @@ function generateTaskId() {
 
 }
 // Todo: create a function to create a task card
-function createTaskCard(task) {
+function createTaskCard() {
     const taskID = generateTaskId();
     const $taskTitle = $('#task-name');
     const $taskInfo = $('#description-text');
     const $dueDate = $('#deadline');
 
-    const task = {
+    const newTask = {
         id: taskID,
         title: $taskTitle.val(),
         info: $taskInfo.val(),
-        duedate: $dueDate.val(),
-        started: false
+        dueDate: $dueDate.val(),
+        done: false
     };
     const taskList = getTaskData();
-    taskList.push(task);
+    taskList.push(newTask);
 
     localStorage.setItem('tasks', JSON.stringify(taskList));
     $taskTitle.val('');
@@ -75,7 +91,11 @@ function handleDeleteTask(event){
 function handleDrop(event, ui) {
 
 }
-
+function init() {
+    $('#deadline').datepicker({
+        minDate: 0
+    });
+}
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function () {
 
