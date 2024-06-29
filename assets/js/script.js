@@ -1,7 +1,16 @@
+const $started = $('.started');
+const $inProgress = $('.in-progress');
+const $done = $('.done');
+
 // Retrieve tasks and nextId from localStorage
 function getTaskData() {
     let taskList = JSON.parse(localStorage.getItem("tasks"));
     let nextId = JSON.parse(localStorage.getItem("nextId"));
+}
+
+//Function get output Tasks
+function outputTasks() {
+    const tasks = getTaskData
 }
 
 
@@ -33,7 +42,7 @@ function createTaskCard(task) {
         title: $taskTitle.val(),
         info: $taskInfo.val(),
         duedate: $dueDate.val(),
-        done: false
+        started: false
     };
     const taskList = getTaskData();
     taskList.push(task);
@@ -42,6 +51,8 @@ function createTaskCard(task) {
     $taskTitle.val('');
     $taskInfo.val('');
     $dueDate.val('');
+    
+    outputTasks();
 }
 
 // Todo: create a function to render the task list and make cards draggable
