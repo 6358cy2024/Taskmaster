@@ -19,7 +19,7 @@ function outputTasks() {
                 <h5>Task Title: ${taskObj.title}</h5>
                 <p>Description: ${taskObj.info}</p>
                 <p>Due Date: ${taskObj.dueDate}</p>
-                <button  class='btn bg-danger text-light'>Delete</button>
+                <button class='btn bg-danger text-light'>Delete</button>
             </article>   
         `);
         if (taskObj.done) {
@@ -110,30 +110,30 @@ function renderTaskList(eventObj, ui) {
     area.append(article);
 }
 
-// Todo: create a function to handle adding a new task
-function handleAddTask(event){
-
-}
-
 // Todo: create a function to handle deleting a task
-function handleDeleteTask(event){
+function handleDeleteTask(eventObj){
+    const btn = $(eventObj.target);
+    const taskID = btn.parent('article').data('id');
 
-
-}
-
-// Todo: create a function to handle dropping a task into a new status lane
-function handleDrop(event, ui) {
+    const tasks = getTaskData();
+    const filtered = tasks.filter(function(taskObj) {
+        if (taskObj.id !== taskID) return true
+    });
+    localStorage.setItem('tasks', JSONstringify(filtered));
+    btn.parent('article').remove();
 }
 
 function init() {
     $('#deadline').datepicker({
         minDate: 0
     });
+
+    $('main').on('click', 'buton.bg-danger', handleDeleteTask);
     $saveBtn.on('click', createTaskCard);
     outputTasks();
     $('.card-body').droppable({
         accept: 'article',
-        drop: renderTaskList
+        drop: renderTaskList//lets you drops elements into boxes
     });
 
     $('article').draggable({
