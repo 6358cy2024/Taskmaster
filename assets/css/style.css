@@ -1,6 +1,7 @@
 body {
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
+  height: 100%
 }
 
 .swim-lanes {
@@ -13,4 +14,16 @@ body {
 /* test */
 .task-card:hover {
   cursor: grab;
+}
+
+article.done{
+  background: rgb(13, 195, 65) !important;
+}
+
+article.inProgress{
+  background: rgb(240, 240, 9) !important;
+}
+
+article.started{
+  background: #bd6e6c !important;
 }

@@ -15,19 +15,22 @@ function outputTasks() {
     const tasks = getTaskData();
     tasks.forEach(function(taskObj){
         const $taskEl = $(`
-            <article class="bg-white border border-dark-subtle p-3 m-4">
+            <article data-id='${taskObj.id}' class = "bg-white border border-dark-subtle p-3 m-4">
                 <h5>Task Title: ${taskObj.title}</h5>
                 <p>Description: ${taskObj.info}</p>
                 <p>Due Date: ${taskObj.dueDate}</p>
-                <button data-id='${taskObj.id}' class='btn bg-danger text-light'>Delete</button>
+                <button  class='btn bg-danger text-light'>Delete</button>
             </article>   
         `);
         if (taskObj.done) {
-            $done.append($taskEl);
+            $done.append($taskEl); 
+            $taskEl.addClass('done');//This helps with adding the color in CSS
         } else if (taskObj.inProgress) {
             $inProgress.append($taskEl);
+            $taskEl.addClass('inProgress');
         }   else {
             $started.append($taskEl);
+            $taskEl.addClass('started');
         }
         
     })
@@ -76,6 +79,34 @@ function createTaskCard() {
 function renderTaskList(eventObj, ui) {
     const area = $(eventObj.target);
     const article = $(ui.draggable[0]);
+    const articleID = article.data('id');
+    const tasks = getTaskData();
+
+    const task = tasks.find(function(taskObj){
+        if (taskObj.id === articleID) return true;
+    });
+
+    if (area.hasClass('started')) {
+        task.started = true;
+        task.inProgress = false;
+        task.done = false;
+        article.addClass('started');
+    }
+    if (area.hasClass('in-progress')) {
+        task.started = false;
+        task.inProgress = true;
+        task.done = false;
+        article.addClass('inProgress');
+    }
+    if (area.hasClass('done')) {
+        task.started = false;
+        task.inProgress = false;
+        task.done = true;
+        article.addClass('done');
+    }
+
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+
     area.append(article);
 }
 
