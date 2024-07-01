@@ -18,7 +18,7 @@ function outputTasks() {
     $started.empty();
     tasks.forEach(function(taskObj){
         const $taskEl = $(`
-            <article data-id='${taskObj.id}' class = "bg-white border border-dark-subtle p-3 m-4">
+            <article data-id='${taskObj.id}' class="bg-white border border-dark-subtle p-3 m-4">
                 <h5>Task Title: ${taskObj.title}</h5>
                 <p>Description: ${taskObj.info}</p>
                 <p>Due Date: ${taskObj.dueDate}</p>
@@ -37,6 +37,7 @@ function outputTasks() {
         }
         
     })
+    setUpDraggable();
 }
 
 
@@ -90,12 +91,14 @@ function handleDrop(eventObj, ui) {
     const task = tasks.find(function(taskObj){
         if (taskObj.id === articleID) return true;
     });
-    area.removeClass('started inProgress done');
+    console.log(area);
+    article.removeClass('started inProgress done');
     if (area.hasClass('started')) {
         task.started = true;
         task.inProgress = false;
         task.done = false;
         article.addClass('started');
+        
     }
     if (area.hasClass('in-progress')) {
         task.started = false;
@@ -109,7 +112,7 @@ function handleDrop(eventObj, ui) {
         task.done = true;
         article.addClass('done');
     }
-
+    console.log(tasks);
     localStorage.setItem('tasks', JSON.stringify(tasks));
 
     area.append(article);
@@ -128,19 +131,7 @@ function handleDeleteTask(eventObj){
     btn.parent('article').remove();
 }
 
-function init() {
-    $('#deadline').datepicker({
-        minDate: 0
-    });
-
-    $('main').on('click', 'button.bg-danger', handleDeleteTask);
-    $saveBtn.on('click', createTaskCard);
-    outputTasks();
-    $('.card-body').droppable({
-        accept: 'article',
-        drop: handleDrop//lets you drops elements into boxes
-    });
-
+function setUpDraggable() {
     $('article').draggable({
         opacity: 0.7,
         zIndex: 500,
@@ -156,6 +147,21 @@ function init() {
             return clone;
         }
     });
+}
+
+function init() {
+    $('#deadline').datepicker({
+        minDate: 0
+    });
+    $('main').on('click', 'button.bg-danger', handleDeleteTask);
+    $saveBtn.on('click', createTaskCard);
+    outputTasks();
+    $('.card-body').droppable({
+        accept: 'article',
+        drop: handleDrop//lets you drop elements into boxes
+    });
+
+    
 
 }
 init();
