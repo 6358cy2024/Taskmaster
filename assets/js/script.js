@@ -13,6 +13,9 @@ function getTaskData() {
 //Function get output Tasks
 function outputTasks() {
     const tasks = getTaskData();
+    $done.empty();
+    $inProgress.empty();
+    $started.empty();
     tasks.forEach(function(taskObj){
         const $taskEl = $(`
             <article data-id='${taskObj.id}' class = "bg-white border border-dark-subtle p-3 m-4">
@@ -61,7 +64,9 @@ function createTaskCard() {
         title: $taskTitle.val(),
         info: $taskInfo.val(),
         dueDate: $dueDate.val(),
-        done: false
+        done: false,
+        inProgress: false,
+        started: true
     };
     const taskList = getTaskData();
     taskList.push(newTask);
@@ -76,7 +81,7 @@ function createTaskCard() {
 
 }
 // Todo: create a function to render the task list and make cards draggable
-function renderTaskList(eventObj, ui) {
+function handleDrop(eventObj, ui) {
     const area = $(eventObj.target);
     const article = $(ui.draggable[0]);
     const articleID = article.data('id');
@@ -85,7 +90,7 @@ function renderTaskList(eventObj, ui) {
     const task = tasks.find(function(taskObj){
         if (taskObj.id === articleID) return true;
     });
-
+    area.removeClass('started inProgress done');
     if (area.hasClass('started')) {
         task.started = true;
         task.inProgress = false;
@@ -119,7 +124,7 @@ function handleDeleteTask(eventObj){
     const filtered = tasks.filter(function(taskObj) {
         if (taskObj.id !== taskID) return true
     });
-    localStorage.setItem('tasks', JSONstringify(filtered));
+    localStorage.setItem('tasks', JSON.stringify(filtered));
     btn.parent('article').remove();
 }
 
@@ -128,12 +133,12 @@ function init() {
         minDate: 0
     });
 
-    $('main').on('click', 'buton.bg-danger', handleDeleteTask);
+    $('main').on('click', 'button.bg-danger', handleDeleteTask);
     $saveBtn.on('click', createTaskCard);
     outputTasks();
     $('.card-body').droppable({
         accept: 'article',
-        drop: renderTaskList//lets you drops elements into boxes
+        drop: handleDrop//lets you drops elements into boxes
     });
 
     $('article').draggable({
